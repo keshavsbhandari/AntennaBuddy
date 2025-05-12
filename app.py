@@ -67,6 +67,8 @@ def handle_comparison_buttons(viz_type, N, d):
         return False
         
     col1, col2 = st.columns([1, 5])
+    should_rerun = False
+    
     with col1:
         if st.button("➕ Add to Comparison", key="compare_button"):
             # Get existing colors
@@ -101,14 +103,14 @@ def handle_comparison_buttons(viz_type, N, d):
                 'R_dB': DEFAULT_R_DB,
                 'wavelength': DEFAULT_WAVELENGTH
             }
-            return True
+            should_rerun = True
 
     with col2:
         if st.button("🗑️ Reset Comparisons", key="reset_button"):
             st.session_state.comparison_plots = []
-            return True
+            should_rerun = True
     
-    return False
+    return should_rerun
 
 def create_plot(viz_type, N, d):
     """Create and return the appropriate plot based on visualization type."""
@@ -188,7 +190,7 @@ def main():
 
     # Handle comparison buttons
     if handle_comparison_buttons(viz_type, N, d):
-        st.experimental_rerun()
+        st.rerun()
 
     # Create and display the appropriate plot
     plot, controls = create_plot(viz_type, N, d)
